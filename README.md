@@ -1,35 +1,70 @@
-<?xml version="1.0"?>
-<Container version="2">
-  <Name>OCRmyPDF</Name>
-  <Repository>jbarlow83/ocrmypdf:latest</Repository>
-  <Registry>https://hub.docker.com/r/jbarlow83/ocrmypdf</Registry>
-  <Network>bridge</Network>
-  <MyIP/>
-  <Shell>sh</Shell>
-  <Privileged>false</Privileged>
-  <Support>https://github.com/jbarlow83/OCRmyPDF</Support>
-  <Project>https://github.com/jbarlow83/OCRmyPDF</Project>
-  <Overview>OCRmyPDF adds an OCR text layer to scanned PDFs, making them searchable. This template includes a watch-folder service that automatically processes PDFs placed in the watch directory.</Overview>
-  <Category>Productivity</Category>
-  <WebUI/>
-  <TemplateURL/>
-  <Icon>https://raw.githubusercontent.com/weltspion/OCRmyPDF/main/icon.png</Icon>
-  <ExtraParams>--restart unless-stopped --hostname ocrmypdf --entrypoint /bin/sh</ExtraParams>
-  <PostArgs>/config/watch.sh</PostArgs>
-  
-  <!-- Variables -->
-  <Config Name="Watch Directory" Target="WATCH_DIR" Default="/watch" Mode="" Description="Directory to watch for incoming PDFs (container path)" Type="Variable" Display="always" Required="false" Mask="false">/watch</Config>
-  
-  <Config Name="Output Directory" Target="OUTPUT_DIR" Default="/output" Mode="" Description="Directory for processed PDFs (container path)" Type="Variable" Display="always" Required="false" Mask="false">/output</Config>
-  
-  <Config Name="Language" Target="language" Default="deu+eng" Mode="" Description="OCR language(s) - e.g., deu+eng for German and English, eng for English only" Type="Variable" Display="always" Required="false" Mask="false">deu+eng</Config>
-  
-  <Config Name="Update Interval" Target="update_interval" Default="10" Mode="" Description="Update interval in seconds - how often to check for new PDFs" Type="Variable" Display="always" Required="false" Mask="false">10</Config>
-  
-  <!-- Paths -->
-  <Config Name="Config" Target="/config" Default="" Mode="rw" Description="Configuration directory for watch script" Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/OCRmyPDF</Config>
-  
-  <Config Name="Watch" Target="/watch" Default="" Mode="rw" Description="Watch directory - place PDFs here for automatic processing" Type="Path" Display="always" Required="true" Mask="false"/>
-  
-  <Config Name="Output" Target="/output" Default="" Mode="rw" Description="Output directory - processed PDFs will appear here" Type="Path" Display="always" Required="true" Mask="false"/>
-</Container>
+# OCRmyPDF für Unraid
+
+OCRmyPDF fügt gescannten PDFs eine durchsuchbare OCR-Textschicht hinzu. Dieses Template enthält einen Watch-Folder-Service, der PDFs automatisch verarbeitet.
+
+## Features
+
+- Automatische OCR-Verarbeitung von PDFs
+- Watch-Folder-Service (überwacht Verzeichnis kontinuierlich)
+- Konfigurierbare OCR-Sprachen (Standard: Deutsch + Englisch)
+- Konfigurierbares Update-Intervall
+- Verlustfreie Optimierung der PDFs
+
+## Installation
+
+1. Installieren Sie das Template über Community Applications
+2. Konfigurieren Sie die Pfade:
+   - **Watch:** Verzeichnis für eingehende PDFs
+   - **Output:** Verzeichnis für verarbeitete PDFs
+   - **Config:** Konfigurationsverzeichnis (Standard: `/mnt/user/appdata/OCRmyPDF`)
+3. Optional: Passen Sie die Variablen an:
+   - **Watch Directory:** Container-Pfad für Watch-Verzeichnis (Standard: `/watch`)
+   - **Output Directory:** Container-Pfad für Output-Verzeichnis (Standard: `/output`)
+   - **Language:** OCR-Sprache(n) (Standard: `deu+eng`)
+   - **Update Interval:** Prüfintervall in Sekunden (Standard: `10`)
+4. Starten Sie den Container
+
+## Script-Installation
+
+Das Watch-Script muss im Config-Verzeichnis erstellt werden:
+
+```bash
+mkdir -p /mnt/user/appdata/OCRmyPDF
+
+# Script vom Repository kopieren
+curl -o /mnt/user/appdata/OCRmyPDF/watch.sh https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/watch.sh
+
+# Oder manuell erstellen (siehe watch.sh im Repository)
+
+chmod +x /mnt/user/appdata/OCRmyPDF/watch.sh
+```
+
+Das Script `watch.sh` ist im Repository enthalten und kann direkt verwendet werden.
+
+## Verwendung
+
+1. Legen Sie PDFs in das **Watch-Verzeichnis**
+2. Der Container verarbeitet sie automatisch (je nach Update-Intervall)
+3. Verarbeitete PDFs erscheinen im **Output-Verzeichnis**
+4. Original-PDFs werden nach erfolgreicher Verarbeitung gelöscht
+
+## OCR-Sprachen
+
+Häufige Sprachkombinationen:
+- `deu+eng` - Deutsch + Englisch
+- `eng` - Nur Englisch
+- `deu` - Nur Deutsch
+- `fra+eng` - Französisch + Englisch
+
+Weitere Sprachen: https://ocrmypdf.readthedocs.io/en/latest/languages.html
+
+## Logs
+
+```bash
+docker logs OCRmyPDF
+```
+
+## Support
+
+- OCRmyPDF Dokumentation: https://ocrmypdf.readthedocs.io/
+- GitHub: https://github.com/jbarlow83/OCRmyPDF
