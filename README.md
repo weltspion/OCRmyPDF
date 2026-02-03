@@ -30,7 +30,7 @@ The watch script must be created in the Config directory:
 mkdir -p /mnt/user/appdata/OCRmyPDF
 
 # Copy script from repository
-curl -o /mnt/user/appdata/OCRmyPDF/watch.sh https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/watch.sh
+curl -o /mnt/user/appdata/OCRmyPDF/watch.sh https://raw.githubusercontent.com/weltspion/OCRmyPDF/main/watch.sh
 
 # Or create manually (see watch.sh in repository)
 
